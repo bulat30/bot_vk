@@ -1,0 +1,50 @@
+import random 
+import vk_api 
+import pandas as pd 
+from vk_api.longpoll import VkLongPoll, VkEventType 
+
+vk = vk_api.VkApi(login='89375091001', password='Samira509004'); 
+vk.auth(token_only=True) 
+while(True): 
+longpoll = VkLongPoll(vk) 
+for event in longpoll.listen(): 
+if event.type == VkEventType.MESSAGE_NEW: 
+print("New msg: ") 
+if event.from_me: 
+print('От меня для: ', end='') 
+elif event.to_me: 
+print('Для меня от: ', end='') 
+if event.from_user: 
+print(event.user_id) 
+elif event.from_chat: 
+print(event.user_id, 'в беседе', event.chat_id) 
+
+
+elif event.type == VkEventType.USER_TYPING: 
+print('Печатает ', end='') 
+
+if event.from_user: 
+print(event.user_id) 
+rand_id = random.randint(10000, 999999) 
+sms = event.text 
+data = pd.read_csv('./titanic.csv') 
+for i in range(14): 
+file = (data['sms'])[i] 
+ans = (data['ans'])[i] 
+if sms == file: 
+sms = ans 
+
+vk.method('messages.send', {'user_id': event.user_id, 'random_id': rand_id, 'getLongPollHistory': event.text, 'message': sms}) 
+
+break 
+
+
+elif event.from_group: 
+print('администратор группы', event.group_id) 
+
+elif event.type == VkEventType.USER_TYPING_IN_CHAT: 
+print('Печатает ', event.user_id, 'в беседе', event.chat_id) 
+
+
+else: 
+print(event.type, event.raw[1:])
