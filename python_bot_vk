@@ -3,7 +3,7 @@ import vk_api
 import pandas as pd 
 from vk_api.longpoll import VkLongPoll, VkEventType 
 
-vk = vk_api.VkApi(login='89375091001', password='Samira509004'); 
+vk = vk_api.VkApi(login='login', password='password'); 
 vk.auth(token_only=True) 
 while(True): 
 longpoll = VkLongPoll(vk) 
